@@ -2,7 +2,14 @@
 
 require_relative "version"
 
-module BrazilPriceScrapper
+module BrazilPrice
   class Error < StandardError; end
   # Your code goes here...
+
+  class Scrapper
+
+    def scrape(platform, product_name)
+      # TODO: implement a factory here to scrape product prices from a given plataform
+    end
+  end
 end

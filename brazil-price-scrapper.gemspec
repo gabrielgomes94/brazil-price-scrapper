@@ -4,7 +4,7 @@ require_relative "lib/version"
 
 Gem::Specification.new do |spec|
   spec.name = "brazil-price-scrapper"
-  spec.version = BrazilPriceScrapper::VERSION
+  spec.version = BrazilPrice::VERSION
   spec.authors = ["Gabriel"]
   spec.email = ["gabrielgomesch@gmail.com"]
 
