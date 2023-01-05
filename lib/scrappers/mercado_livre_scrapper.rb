@@ -1,4 +1,7 @@
 # frozen_string_literal: true
+
+require 'vessel'
+
 module BrazilPrices
   module Scrappers
     class MercadoLivreScrapper < Vessel::Cargo
@@ -26,10 +29,10 @@ module BrazilPrices
 
       def parse
         css(PRODUCT_CONTAINER_SELECTOR).each do |element|
-          price_element = element.at_css(PRODUCT_PRICE_SELECTOR).text
+          price_element = parse_from_selector(element, PRODUCT_PRICE_SELECTOR)
           price = parse_price(price_element)
-          title = element.at_css(PRODUCT_TITLE_SELECTOR).text
-          link = element.at_css(PRODUCT_LINK_SELECTOR).attribute(:href)
+          title = parse_from_selector(element, PRODUCT_TITLE_SELECTOR)
+          link = element.css(PRODUCT_LINK_SELECTOR).attribute(:href)
 
           yield({
             title: title,
@@ -38,21 +41,25 @@ module BrazilPrices
           })
         end
 
-        next_page = at_css(NEXT_PAGE_SELECTOR)
+        next_page = css(NEXT_PAGE_SELECTOR)
 
         if next_page
-          link = next_page.at_css('a').attribute(:href)
+          link = next_page.css('a').attribute(:href)
 
           yield request(url: absolute_url(link))
         end
       end
 
-      def parse_price(price)
-        price.gsub!('.', '')
-        price.gsub!(/[[:space:]]/, '')
-        price.gsub!(',', '.')
+      private
 
-        price
+      def parse_price(price)
+        price = price.gsub('.', '')
+        price = price.gsub(/[[:space:]]/, '')
+        price.gsub(',', '.')
+      end
+
+      def parse_from_selector(element, css_selector)
+        element.css(css_selector).text
       end
     end
   end
